@@ -9,8 +9,6 @@ st.set_page_config(page_title="GPT 웹 요약기", layout="wide")
 st.title("🌐 GPT 웹페이지 요약기")
 st.write("웹페이지 본문을 자동으로 요약해드립니다. 하위 링크까지 포함됩니다.")
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-
 def extract_links(url):
     base = urlparse(url).netloc
     try:
@@ -37,13 +35,14 @@ def extract_text(url):
         return ""
 
 def summarize_text(text):
-    prompt = f"다음 웹 페이지 내용을 핵심만 요약해줘:\n{text}"
-    response = openai.ChatCompletion.create(
+    client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
+        messages=[{"role": "user", "content": f"다음 웹 페이지 내용을 핵심만 요약해줘:\n{text}"}],
         temperature=0.5
     )
-    return response.choices[0].message['content']
+    return response.choices[0].message.content
 
 url = st.text_input("🔗 웹페이지 주소 입력", placeholder="https://example.com")
 
