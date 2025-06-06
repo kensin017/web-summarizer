@@ -38,7 +38,7 @@ def summarize_text(text):
     client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=[{"role": "user", "content": f"다음 웹 페이지 내용을 핵심만 요약해줘:\n{text}"}],
         temperature=0.5
     )
